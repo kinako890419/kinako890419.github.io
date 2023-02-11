@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>兔子巴巴大俠的部落格</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="兔子巴巴大俠的部落格">
+<meta property="og:url" content="https://kinako890419.github.io/index.html">
+<meta property="og:site_name" content="兔子巴巴大俠的部落格">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:author" content="兔子">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="兔子巴巴大俠的部落格" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">兔子巴巴大俠的部落格</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">哪個職業的人最會烤肉？ 老師，因為他考的都沒有教</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜尋"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜尋"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://kinako890419.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-測試用_Quick-Sort-筆記" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/02/11/%E6%B8%AC%E8%A9%A6%E7%94%A8_Quick-Sort-%E7%AD%86%E8%A8%98/" class="article-date">
+  <time class="dt-published" datetime="2023-02-11T13:58:40.000Z" itemprop="datePublished">2023-02-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/02/11/%E6%B8%AC%E8%A9%A6%E7%94%A8_Quick-Sort-%E7%AD%86%E8%A8%98/">測試用_Quick Sort 筆記</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
+<li>為”Divide and Conquer”之演算法</li>
+<li>選擇數列中的一個值作為<strong>pivot</strong>(control key)<ul>
+<li>一般的方法拿第一個值，演算法版拿最後一個值</li>
+</ul>
+</li>
+</ul>
+<h2 id="一般做法"><a href="#一般做法" class="headerlink" title="一般做法"></a>一般做法</h2><h3 id="程式"><a href="#程式" class="headerlink" title="程式"></a>程式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">int partition(int arr[], int low, int high)</span><br><span class="line">&#123;</span><br><span class="line">    int i = low;</span><br><span class="line">    int j = high;</span><br><span class="line">    int pivot = arr[low];</span><br><span class="line"></span><br><span class="line">    while (i &lt; j) // 若i與j之位置無相交</span><br><span class="line">    &#123;</span><br><span class="line">        while (pivot &gt;= arr[i])</span><br><span class="line">            i++;</span><br><span class="line">        while (pivot &lt; arr[j])</span><br><span class="line">            j--;</span><br><span class="line">        if (i &lt; j)</span><br><span class="line">            swap(arr[i], arr[j]);</span><br><span class="line">    &#125;</span><br><span class="line">    swap(arr[low], arr[j]);</span><br><span class="line">    return j;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void quickSort(int arr[], int low, int high)</span><br><span class="line">&#123;</span><br><span class="line">    if (low &lt; high)</span><br><span class="line">    &#123;</span><br><span class="line">        int pivot = partition(arr, low, high);</span><br><span class="line">        // divide and conquer</span><br><span class="line">        quickSort(arr, low, pivot - 1); // pivot左側做quick sort</span><br><span class="line">        quickSort(arr, pivot + 1, high); // pivotu右側做quick sort</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>i 由左往右找比 pivot 大之值</li>
+<li>j 由右往左找比 pivot 小之值</li>
+<li>若 i 與 j 無相交，將位置 i 與位置 j 之值互換</li>
+<li>若 i 與 j 相交，即 i&gt;j，跳出迴圈，將 pivot 與 j 互換</li>
+</ul>
+<h3 id="範例"><a href="#範例" class="headerlink" title="範例"></a>範例</h3><blockquote>
+<p>26,5,31,1,61,11,59,15,48,19 做 Quick Sort 過程為何?</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>pass</th>
+<th>Data</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>initial</td>
+<td><strong>26</strong>,5,37,1,61,11,59,15,48,19</td>
+</tr>
+<tr>
+<td>1</td>
+<td>[11,5,19,1,15],<strong>26</strong>,[59,61,48,31]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>[1,5],<strong>11</strong>,[19,15],<strong>26</strong>,[59,61,48,31]</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>1</strong>,<strong>5</strong>,<strong>11</strong>,[19,15],<strong>26</strong>,[59,61,48,31]</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>1</strong>,<strong>5</strong>,<strong>11</strong>,<strong>15</strong>,<strong>19</strong>,<strong>26</strong>,[59,61,48,31]</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>1</strong>,<strong>5</strong>,<strong>11</strong>,<strong>15</strong>,<strong>19</strong>,<strong>26</strong>,[48,31],<strong>59</strong>,[61]</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>1</strong>,<strong>5</strong>,<strong>11</strong>,<strong>15</strong>,<strong>19</strong>,<strong>26</strong>,[48,31],<strong>59</strong>,<strong>61</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>1</strong>,<strong>5</strong>,<strong>11</strong>,<strong>15</strong>,<strong>19</strong>,<strong>26</strong>,<strong>48</strong>,<strong>31</strong>,<strong>59</strong>,<strong>61</strong></td>
+</tr>
+</tbody></table>
+<p>註: 粗體 &#x3D; sorted, [] &#x3D; unsorted</p>
+<h3 id="時間複雜度"><a href="#時間複雜度" class="headerlink" title="時間複雜度"></a>時間複雜度</h3><ul>
+<li><strong>Best Case</strong>: pass 1 後 pivot 插在數列的正中間 &#x3D;&gt; <span style= "background-color:yellow" > O(log n) </span><ul>
+<li>T(n) &#x3D; T(n&#x2F;2) + T(n&#x2F;2)</li>
+</ul>
+</li>
+<li><strong>Worst Case</strong>: 欲進行 Quick Sort 之 data 已經 sorted，不論由大到小或由小到大排序&#x3D;&gt; <span style= "background-color:yellow" > O($n^2$) </span></li>
+</ul>
+<h3 id="Worst-Case-的改善方法-—-Middle-of-Three"><a href="#Worst-Case-的改善方法-—-Middle-of-Three" class="headerlink" title="Worst Case 的改善方法 — Middle of Three"></a>Worst Case 的改善方法 — <span style= "background-color:aqua" >Middle of Three</span></h3><ul>
+<li>使 pivot 不為數列中的最大或最小值</li>
+<li>方法<ul>
+<li>比較 A[low]、A[(low+high)&#x2F;2] (數列的中央)、A[high]大小，找出中間值與 A[low]互換，將新的 A[low]作為 pivot</li>
+</ul>
+</li>
+</ul>
+<h2 id="演算法版"><a href="#演算法版" class="headerlink" title="演算法版"></a>演算法版</h2><ul>
+<li>將數列的<strong>最後一個值</strong>作為 pivot</li>
+</ul>
+<h3 id="partition-程式"><a href="#partition-程式" class="headerlink" title="partition 程式"></a><span style= "background-color:yellow" >partition 程式</span></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">partition (arr[], low, high)</span><br><span class="line">&#123;</span><br><span class="line">    pivot = arr[high];</span><br><span class="line">    i = (low – 1);</span><br><span class="line">    for (j = low; j &lt;= high- 1; j++)&#123;</span><br><span class="line">        if (arr[j] &lt; pivot)&#123;</span><br><span class="line">            i++;</span><br><span class="line">            swap(arr[i],arr[j])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    swap(arr[i + 1],arr[high]) // i的下一個值和pivot互換</span><br><span class="line">    return (i + 1) // return pivot</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="時間複雜度-1"><a href="#時間複雜度-1" class="headerlink" title="時間複雜度"></a>時間複雜度</h3><ul>
+<li><strong>Best Case</strong>: <span style= "background-color:yellow" > O(n log n) </span><ul>
+<li>T(n) &#x3D; 2T(n) + c$*$n</li>
+</ul>
+</li>
+<li><strong>Average Case</strong>: <span style= "background-color:yellow" > O(n log n) </span></li>
+<li><strong>Worst Case</strong>: 欲進行 Quick Sort 之 data 已經 sorted，不論由大到小或由小到大排序，或<strong>資料全部相同</strong>&#x3D;&gt; <span style= "background-color:yellow" > O($n^2$) </span></li>
+</ul>
+<h2 id="使用-partition-概念找出未排序陣列中第-k-小之值"><a href="#使用-partition-概念找出未排序陣列中第-k-小之值" class="headerlink" title="使用 partition 概念找出未排序陣列中第 k 小之值"></a>使用 partition 概念找出未排序陣列中第 k 小之值</h2><h3 id="程式-1"><a href="#程式-1" class="headerlink" title="程式"></a>程式</h3><ul>
+<li>直覺法為先做排序後尋找，極限為 O(n logn)</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">int partition(int arr[], int l, int r);</span><br><span class="line"></span><br><span class="line">int kthSmallest(int arr[], int l, int r, int K) // 找陣列中大小第Kth之值</span><br><span class="line">&#123;</span><br><span class="line">    if (K &gt; 0 &amp;&amp; K &lt;= r - l + 1) &#123; // K在陣列範圍之內</span><br><span class="line">        int pos = partition(arr, l, r); // pos = pivot的位置</span><br><span class="line"></span><br><span class="line">        if (pos - l == K - 1)&#123; // 若pivot的位置等於K，pivot即陣列中大小第Kth之值</span><br><span class="line">            return arr[pos];</span><br><span class="line">        &#125;</span><br><span class="line">        // 若pivot位置大於或小於K，則往左半或右半邊做partition (遞迴)</span><br><span class="line">        if (pos - l &gt; K - 1) &#123;</span><br><span class="line">            return kthSmallest(arr, l, pos - 1, K);</span><br><span class="line">        &#125;</span><br><span class="line">        return kthSmallest(arr, pos + 1, r, K - pos + l - 1);</span><br><span class="line">    &#125;</span><br><span class="line">    return INT_MAX;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int partition(int arr[], int l, int r)</span><br><span class="line">&#123;</span><br><span class="line">    int x = arr[r], i = l;</span><br><span class="line">    for (int j = l; j &lt;= r - 1; j++) &#123;</span><br><span class="line">        if (arr[j] &lt;= x) &#123;</span><br><span class="line">            swap(&amp;arr[i], &amp;arr[j]);</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    swap(&amp;arr[i], &amp;arr[r]);</span><br><span class="line">    return i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="時間複雜度-2"><a href="#時間複雜度-2" class="headerlink" title="時間複雜度"></a>時間複雜度</h3><ul>
+<li><strong>Best Case</strong>: <span style= "background-color:yellow" > O(n) </span><ul>
+<li>T(n) &#x3D; T(n&#x2F;2) + c$*$n</li>
+</ul>
+</li>
+<li><strong>Average Case</strong>: 在不失一般性的情況下<span style= "background-color:yellow" > O(n) </span></li>
+<li><strong>Worst Case</strong>: <span style= "background-color:yellow" > O($n^2$) </span></li>
+</ul>
+<hr>
+
+<p><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/quick-sort/">source1</a><br><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/kth-smallestlargest-element-unsorted-array/">source2</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://kinako890419.github.io/2023/02/11/%E6%B8%AC%E8%A9%A6%E7%94%A8_Quick-Sort-%E7%AD%86%E8%A8%98/" data-id="cle01f586000114v5dckhevcj" data-title="測試用_Quick Sort 筆記" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/02/11/hello-world/" class="article-date">
+  <time class="dt-published" datetime="2023-02-11T13:32:40.907Z" itemprop="datePublished">2023-02-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/02/11/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://kinako890419.github.io/2023/02/11/hello-world/" data-id="cle01f57x000014v585fzbizu" data-title="Hello World" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">彙整</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/02/">二月 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/02/11/%E6%B8%AC%E8%A9%A6%E7%94%A8_Quick-Sort-%E7%AD%86%E8%A8%98/">測試用_Quick Sort 筆記</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/11/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 兔子<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
