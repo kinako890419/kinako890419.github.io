@@ -75,7 +75,11 @@ const isExternal = (url: string) => /^https?:\/\//.test(url);
           <ul class="face__links pixel">
             {data.links.map((link) => (
               <li>
-                <a href={localePath(link.url, lang)} rel={isExternal(link.url) ? 'me noopener' : undefined}>
+                <a
+                  href={localePath(link.url, lang)}
+                  target={isExternal(link.url) ? '_blank' : undefined}
+                  rel={isExternal(link.url) ? 'me noopener noreferrer' : undefined}
+                >
                   {localize(link.label, lang)}
                 </a>
               </li>

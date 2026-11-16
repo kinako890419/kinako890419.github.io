@@ -18,7 +18,7 @@ const [latest] = await getPosts(CONTENT_LANG);
       {(credit || latest) && (
         <div class="behind pixel" data-behind-card inert>
           {credit && (
-            <a href={credit.url} rel="noopener">
+            <a href={credit.url} target="_blank" rel="noopener noreferrer">
               {localize(credit.label, lang)}
             </a>
           )}
