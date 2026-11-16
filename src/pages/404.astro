@@ -1,0 +1,33 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { localePath, toLang, useTranslations } from '../i18n/ui';
+import sleeping from '../../assets/meSleep-mute.gif';
+
+const lang = toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+---
+
+<PageLayout title={t('404.title')} lang={lang}>
+  <div class="lost">
+    <img src={sleeping.src} alt="" width="144" height="144" />
+    <h1 class="page-title">404: {t('404.title')}</h1>
+    <a class="pixel-btn" href={localePath('/', lang)}>
+      {t('404.home')}
+    </a>
+  </div>
+</PageLayout>
+
+<style>
+  .lost {
+    text-align: center;
+    padding-top: 2rem;
+  }
+  img {
+    display: block;
+    margin: 0 auto 1rem;
+    image-rendering: pixelated; /* 48×48 sprite shown at 3× */
+  }
+  .pixel-btn {
+    text-decoration: none;
+  }
+</style>

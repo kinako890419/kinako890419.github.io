@@ -1,0 +1,36 @@
+---
+// /blog/year/2025/, /blog/year/2025/page/2/, ...
+import BlogListing from '../../../../components/BlogListing.astro';
+import { CONTENT_LANG, getPosts, getYears, pagedPaths, yearOf, type Post } from '../../../../lib/posts';
+import { toLang, useTranslations } from '../../../../i18n/ui';
+
+export async function getStaticPaths() {
+  const posts = await getPosts(CONTENT_LANG);
+  return [...getYears(posts).keys()].flatMap((year) =>
+    pagedPaths(
+      posts.filter((p) => yearOf(p) === year),
+      { year },
+      { year },
+    ),
+  );
+}
+
+const { year, posts, page, pages } = Astro.props as {
+  year: string;
+  posts: Post[];
+  page: number;
+  pages: number;
+};
+const lang = toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+---
+
+<BlogListing
+  heading={`${year}${t('years.suffix')}`}
+  posts={posts}
+  page={page}
+  pages={pages}
+  base={`/blog/year/${year}/`}
+  lang={lang}
+  currentYear={year}
+/>

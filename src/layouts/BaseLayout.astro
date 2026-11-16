@@ -1,0 +1,148 @@
+---
+import '../styles/global.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import LangMenu from '../components/LangMenu.astro';
+import { profile } from '../data/profile';
+import smol from '../../assets/smol.gif';
+import { languages, localize, localePath, stripLocale, toLang, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: Lang;
+  variant?: 'home' | 'page';
+}
+
+const { title, description, lang = toLang(Astro.currentLocale), variant = 'page' } = Astro.props;
+const t = useTranslations(lang);
+const siteTitle = localize(profile.site.title, lang);
+const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+const desc = description ?? localize(profile.site.description, lang);
+// same page in every language; /en/ pages repeat the zh-tw content, so the zh-tw URL is canonical
+const basePath = stripLocale(Astro.url.pathname);
+const canonical = new URL(basePath, Astro.site);
+---
+
+<!doctype html>
+<html lang={languages[lang].htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content={variant === 'home' ? 'website' : 'article'} />
+    <meta property="og:url" content={canonical} />
+    <link rel="icon" href="data:," />
+    <link rel="preload" href="/fonts/Cubic_11.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#fff6e8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#221c29" media="(prefers-color-scheme: dark)" />
+    <script is:inline>
+      // Set theme before first paint to avoid a flash.
+      (() => {
+        const saved = localStorage.getItem('theme');
+        const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+  </head>
+  <body class={`variant-${variant}`}>
+    <header class="site-header">
+      <a class="site-title pixel" href={localePath('/', lang)}>
+        <img src={smol.src} alt="" width={smol.width} height={smol.height} />
+        {siteTitle}
+      </a>
+      <nav class="site-nav pixel" aria-label="main">
+        <a class="nav-home" href={localePath('/', lang)}>
+          {t('nav.home')}
+        </a>
+        <a href={localePath('/blog/', lang)}>{t('nav.blog')}</a>
+        <LangMenu lang={lang} />
+        <ThemeToggle lang={lang} />
+      </nav>
+    </header>
+
+    <main class="site-main">
+      <slot />
+    </main>
+
+    <footer class="site-footer pixel">
+      © <span data-year>{new Date().getFullYear()}</span>&nbsp;{localize(profile.site.author, lang)}
+    </footer>
+    <script is:inline>
+      // Static site: show the visitor's current year, not the year it was built.
+      document.querySelector('[data-year]').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    /* header buttons and links stay pink when the card flips */
+    --accent: var(--accent-front);
+    --accent-soft: var(--accent-front-soft);
+    --accent-pale: var(--accent-front-pale);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem clamp(1rem, 4vw, 2rem);
+  }
+  .site-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .site-title img {
+    image-rendering: pixelated;
+  }
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    font-size: 1rem;
+  }
+  .site-nav a {
+    color: var(--text);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  /* smallest phones: the name + icon already link home, so drop 首頁 to fit one line */
+  @media (max-width: 380px) {
+    .site-header {
+      gap: 0.5rem;
+    }
+    .site-title {
+      gap: 0.35rem;
+      font-size: 1rem;
+    }
+    .site-nav {
+      gap: 0.5rem;
+    }
+    .site-nav :global(.pixel-btn) {
+      padding: 0.35em;
+    }
+    .site-nav .nav-home {
+      display: none;
+    }
+  }
+  .site-nav a:hover {
+    color: var(--accent);
+  }
+  .site-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .site-footer {
+    padding: 1.25rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+</style>

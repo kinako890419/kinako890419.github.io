@@ -1,0 +1,66 @@
+---
+import { render } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import TagList from '../../components/TagList.astro';
+import { CONTENT_LANG, getPosts } from '../../lib/posts';
+import { formatDate, languages, localePath, toLang, useTranslations } from '../../i18n/ui';
+
+export async function getStaticPaths() {
+  const posts = await getPosts(CONTENT_LANG);
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const lang = toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+// the post text keeps its own language when shown with another UI language
+const contentLang = post.lang === lang ? undefined : languages[post.lang].htmlLang;
+const { Content } = await render(post);
+const { title, description, date, updated, tags } = post.data;
+---
+
+<PageLayout title={title} description={description} lang={lang}>
+  <article>
+    <header class="post-header">
+      <p class="meta pixel">
+        <time datetime={date.toISOString()}>{formatDate(date, lang)}</time>
+        {updated && (
+          <span>
+            · {t('blog.updated')} <time datetime={updated.toISOString()}>{formatDate(updated, lang)}</time>
+          </span>
+        )}
+      </p>
+      <h1 class="page-title" lang={contentLang}>
+        {title}
+      </h1>
+      <TagList tags={tags} lang={lang} />
+    </header>
+
+    <div class="prose" lang={contentLang}>
+      <Content />
+    </div>
+  </article>
+
+  <a class="back pixel" href={localePath('/blog/', lang)}>
+    ◂ {t('blog.back')}
+  </a>
+</PageLayout>
+
+<style>
+  .post-header {
+    margin-bottom: 2.5rem;
+  }
+  .post-header :global(.page-title) {
+    margin-bottom: 0.75rem;
+  }
+  .meta {
+    margin: 0 0 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+  .back {
+    display: inline-block;
+    margin-top: 3rem;
+    text-decoration: none;
+  }
+</style>

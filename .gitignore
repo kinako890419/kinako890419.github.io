@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+.idea/
+# generated from the GIFs by scripts/build-sprites.mjs
+public/sprites/generated/
+src/data/sprites.generated.json
+
+# blog posts live in their own repo (locally: symlink to ../blog-posts; CI: checked out here)
+src/content/blog

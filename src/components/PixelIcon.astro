@@ -1,0 +1,77 @@
+---
+const icons = {
+  sun: [
+    '....#....',
+    '.#.....#.',
+    '...###...',
+    '..#####..',
+    '#.#####.#',
+    '..#####..',
+    '...###...',
+    '.#.....#.',
+    '....#....',
+  ],
+  moon: [
+    '...####..',
+    '..###....',
+    '.###.....',
+    '.###.....',
+    '.###.....',
+    '.###.....',
+    '.###.....',
+    '..###....',
+    '...####..',
+  ],
+  globe: [
+    '..#####..',
+    '.#..#..#.',
+    '#..#.#..#',
+    '#########',
+    '#..#.#..#',
+    '#########',
+    '#..#.#..#',
+    '.#..#..#.',
+    '..#####..',
+  ],
+  flip: [
+    '..####...',
+    '.#....#.#',
+    '#......##',
+    '#.....###',
+    '#........',
+    '#.......#',
+    '.#.....#.',
+    '..#####..',
+    '.........',
+  ],
+  // 5×5: drawn at card-sprite resolution (one icon pixel = one card pixel)
+  flipSmall: ['.##.#', '#..##', '#....', '#...#', '.###.'],
+} as const;
+
+interface Props {
+  name: keyof typeof icons;
+  size?: string;
+}
+const { name, size = '1em' } = Astro.props;
+const grid = icons[name];
+const w = grid[0].length;
+const h = grid.length;
+let d = '';
+grid.forEach((row, y) =>
+  [...row].forEach((c, x) => {
+    if (c === '#') d += `M${x} ${y}h1v1h-1z`;
+  }),
+);
+---
+
+<svg
+  class={`pixel-icon pixel-icon--${name}`}
+  viewBox={`0 0 ${w} ${h}`}
+  width={size}
+  height={size}
+  shape-rendering="crispEdges"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={d} fill="currentColor"></path>
+</svg>

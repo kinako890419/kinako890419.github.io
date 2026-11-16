@@ -1,0 +1,16 @@
+---
+// /blog/, /blog/page/2/, ...
+import BlogListing from '../../components/BlogListing.astro';
+import { CONTENT_LANG, getPosts, pagedPaths, type Post } from '../../lib/posts';
+import { toLang, useTranslations } from '../../i18n/ui';
+
+export async function getStaticPaths() {
+  return pagedPaths(await getPosts(CONTENT_LANG), {}, {});
+}
+
+const { posts, page, pages } = Astro.props as { posts: Post[]; page: number; pages: number };
+const lang = toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+---
+
+<BlogListing heading={t('blog.title')} posts={posts} page={page} pages={pages} base="/blog/" lang={lang} />

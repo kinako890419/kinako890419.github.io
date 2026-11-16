@@ -1,0 +1,62 @@
+---
+import PixelIcon from './PixelIcon.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const t = useTranslations(Astro.props.lang);
+---
+
+<button
+  class="theme-toggle pixel-btn"
+  type="button"
+  data-theme-toggle
+  data-label-light={t('theme.toLight')}
+  data-label-dark={t('theme.toDark')}
+  aria-label={t('theme.toDark')}
+>
+  <PixelIcon name="moon" />
+  <PixelIcon name="sun" />
+</button>
+
+<style>
+  .theme-toggle {
+    padding: 0.45em;
+    font-size: 1.1rem;
+  }
+  .theme-toggle :global(.pixel-icon--sun),
+  :global(:root[data-theme='dark']) .theme-toggle :global(.pixel-icon--moon) {
+    display: none;
+  }
+  :global(:root[data-theme='dark']) .theme-toggle :global(.pixel-icon--sun) {
+    display: block;
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+
+  function sync() {
+    if (!btn) return;
+    const dark = root.dataset.theme === 'dark';
+    btn.setAttribute('aria-label', (dark ? btn.dataset.labelLight : btn.dataset.labelDark) ?? '');
+  }
+
+  btn?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    localStorage.setItem('theme', next);
+    sync();
+  });
+
+  // Follow the OS setting until the visitor picks a theme themselves.
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (localStorage.getItem('theme')) return;
+    root.dataset.theme = e.matches ? 'dark' : 'light';
+    sync();
+  });
+
+  sync();
+</script>

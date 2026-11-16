@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Card from '../components/Card.astro';
+import { profile } from '../data/profile';
+import { CONTENT_LANG, getPosts } from '../lib/posts';
+import { localize, localePath, toLang, useTranslations } from '../i18n/ui';
+
+const lang = toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const { credit } = profile.card;
+const [latest] = await getPosts(CONTENT_LANG);
+---
+
+<BaseLayout variant="home" lang={lang}>
+  <div class="home">
+    <h1 class="visually-hidden">{localize(profile.site.title, lang)}</h1>
+    <div class="card-spot">
+      {(credit || latest) && (
+        <div class="behind pixel" data-behind-card inert>
+          {credit && (
+            <a href={credit.url} rel="noopener">
+              {localize(credit.label, lang)}
+            </a>
+          )}
+          {latest && (
+            <a href={localePath(`/blog/${latest.slug}/`, lang)} title={latest.data.title}>
+              {t('home.latestPost')}
+            </a>
+          )}
+        </div>
+      )}
+      <Card lang={lang} />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .home {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+  }
+
+  /* Card and the links behind it share one grid cell; the card sits on top. */
+  .card-spot {
+    display: grid;
+  }
+  .card-spot > :global(*) {
+    grid-area: 1 / 1;
+  }
+  .card-spot > :global([data-card]) {
+    z-index: 1;
+  }
+  /* same look as the links on the card, one size smaller; always front-side red */
+  .behind {
+    place-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4em;
+    font-size: var(--fs-small, 12px);
+    line-height: 1.4;
+  }
+  .behind a {
+    color: var(--accent-front);
+    text-decoration: none;
+  }
+  .behind a::before {
+    content: '▸';
+    display: inline-block;
+    width: 1.1em;
+    margin-left: -1.1em;
+    visibility: hidden;
+  }
+  .behind a:is(:hover, :focus-visible) {
+    background: var(--accent-front-pale);
+    outline-color: var(--accent-front);
+  }
+  .behind a:is(:hover, :focus-visible)::before {
+    visibility: visible;
+  }
+</style>

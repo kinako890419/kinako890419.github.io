@@ -1,0 +1,47 @@
+---
+/** One page of a post listing (all posts, a year, or a tag) with sidebar + pager. */
+import PageLayout from '../layouts/PageLayout.astro';
+import BlogShell from './BlogShell.astro';
+import PostList from './PostList.astro';
+import Pager from './Pager.astro';
+import { CONTENT_LANG, getPosts, getTags, getYears, type Post } from '../lib/posts';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  heading: string;
+  posts: Post[]; // this page's posts
+  page: number;
+  pages: number;
+  base: string; // URL of page 1
+  lang: Lang;
+  currentTag?: string;
+  currentYear?: string;
+}
+const { heading, posts, page, pages, base, lang, currentTag, currentYear } = Astro.props;
+const t = useTranslations(lang);
+const all = await getPosts(CONTENT_LANG);
+const title = page > 1 ? `${heading} · ${t('pager.page').replace('{n}', String(page))}` : heading;
+---
+
+<PageLayout title={title} lang={lang} wide>
+  <h1 class="page-title">{heading}</h1>
+  <BlogShell
+    tags={getTags(all)}
+    years={getYears(all)}
+    total={all.length}
+    lang={lang}
+    currentTag={currentTag}
+    currentYear={currentYear}
+  >
+    <div class="pixel-box panel">
+      <PostList posts={posts} lang={lang} groupByYear={!currentYear} />
+    </div>
+    <Pager base={base} page={page} pages={pages} lang={lang} />
+  </BlogShell>
+</PageLayout>
+
+<style>
+  .panel {
+    padding: 0.75rem;
+  }
+</style>

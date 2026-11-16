@@ -1,0 +1,83 @@
+---
+/** ◂ 上一頁  1 2 3  下一頁 ▸ — hidden when there is only one page. */
+import { localePath, useTranslations, type Lang } from '../i18n/ui';
+import { pageUrl } from '../lib/posts';
+
+interface Props {
+  base: string; // URL of page 1, e.g. /blog/
+  page: number;
+  pages: number;
+  lang: Lang;
+}
+const { base, page, pages, lang } = Astro.props;
+const t = useTranslations(lang);
+const url = (n: number) => localePath(pageUrl(base, n), lang);
+const label = (n: number) => t('pager.page').replace('{n}', String(n));
+---
+
+{pages > 1 && (
+  <nav class="pager pixel" aria-label={t('pager.label')}>
+    {page > 1 ? (
+      <a class="step" href={url(page - 1)} rel="prev">
+        ◂ {t('pager.prev')}
+      </a>
+    ) : (
+      <span class="step" aria-hidden="true" />
+    )}
+    <ol>
+      {Array.from({ length: pages }, (_, i) => i + 1).map((n) => (
+        <li>
+          <a href={url(n)} aria-label={label(n)} aria-current={n === page ? 'page' : undefined}>
+            {n}
+          </a>
+        </li>
+      ))}
+    </ol>
+    {page < pages ? (
+      <a class="step" href={url(page + 1)} rel="next">
+        {t('pager.next')} ▸
+      </a>
+    ) : (
+      <span class="step" aria-hidden="true" />
+    )}
+  </nav>
+)}
+
+<style>
+  .pager {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+  }
+  .step {
+    min-width: 6em;
+    text-decoration: none;
+  }
+  .step:last-child {
+    text-align: right;
+  }
+  ol {
+    display: flex;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  ol a {
+    display: inline-block;
+    min-width: 2em;
+    padding: 0.1em 0.4em;
+    text-align: center;
+    color: var(--text);
+    text-decoration: none;
+  }
+  ol a:hover {
+    background: var(--accent-pale);
+  }
+  ol a[aria-current] {
+    background: var(--accent-soft);
+  }
+</style>

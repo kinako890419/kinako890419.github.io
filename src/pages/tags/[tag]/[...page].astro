@@ -1,0 +1,36 @@
+---
+// /tags/<tag>/, /tags/<tag>/page/2/, ...
+import BlogListing from '../../../components/BlogListing.astro';
+import { CONTENT_LANG, getPosts, getTags, pagedPaths, type Post } from '../../../lib/posts';
+import { toLang, useTranslations } from '../../../i18n/ui';
+
+export async function getStaticPaths() {
+  const posts = await getPosts(CONTENT_LANG);
+  return [...getTags(posts).keys()].flatMap((tag) =>
+    pagedPaths(
+      posts.filter((p) => p.data.tags.includes(tag)),
+      { tag },
+      { tag },
+    ),
+  );
+}
+
+const { tag, posts, page, pages } = Astro.props as {
+  tag: string;
+  posts: Post[];
+  page: number;
+  pages: number;
+};
+const lang = toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+---
+
+<BlogListing
+  heading={`${t('tags.postsTagged')}#${tag}`}
+  posts={posts}
+  page={page}
+  pages={pages}
+  base={`/tags/${encodeURIComponent(tag)}/`}
+  lang={lang}
+  currentTag={tag}
+/>

@@ -1,0 +1,78 @@
+---
+import ChipList, { type Chip } from './ChipList.astro';
+import TagList from './TagList.astro';
+import { localePath, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  tags: Map<string, number>;
+  years: Map<string, number>;
+  total: number;
+  lang: Lang;
+  currentTag?: string;
+  currentYear?: string;
+}
+const { tags, years, total, lang, currentTag, currentYear } = Astro.props;
+const t = useTranslations(lang);
+const yearLinks: Chip[] = [
+  { label: t('years.all'), href: localePath('/blog/', lang), count: total, current: !currentYear && !currentTag },
+  ...[...years].map(([y, n]) => ({
+    label: y,
+    href: localePath(`/blog/year/${y}/`, lang),
+    count: n,
+    current: y === currentYear,
+  })),
+];
+---
+
+<div class="blog-shell">
+  <div class="blog-main">
+    <slot />
+  </div>
+  <aside class="blog-side" aria-label={`${t('years.title')} / ${t('tags.title')}`}>
+    <div class="pixel-box side-panel">
+      <h2 class="pixel">{t('years.title')}</h2>
+      <ChipList items={yearLinks} lang={lang} limit={10} stack />
+    </div>
+    {tags.size > 0 && (
+      <div class="pixel-box side-panel">
+        <h2 class="pixel">{t('tags.title')}</h2>
+        <TagList tags={tags} lang={lang} current={currentTag} limit={10} />
+      </div>
+    )}
+  </aside>
+</div>
+
+<style>
+  .blog-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 13rem;
+    gap: 2rem;
+    align-items: start;
+  }
+  .blog-side {
+    position: sticky;
+    top: 1.5rem;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .side-panel {
+    padding: 0.9rem 1rem 1rem;
+  }
+  h2 {
+    margin: 0 0 0.6rem;
+    font-size: 1rem;
+    font-weight: normal;
+    color: var(--text-muted);
+  }
+  @media (max-width: 760px) {
+    .blog-shell {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .blog-side {
+      position: static;
+      order: -1; /* filters above the post list */
+    }
+  }
+</style>

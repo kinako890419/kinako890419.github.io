@@ -1,0 +1,22 @@
+---
+import ChipList from './ChipList.astro';
+import { localePath, type Lang } from '../i18n/ui';
+
+interface Props {
+  tags: string[] | Map<string, number>;
+  lang: Lang;
+  current?: string;
+  /** show only this many tags until "load more..." is clicked */
+  limit?: number;
+}
+const { tags, lang, current, limit } = Astro.props;
+const entries: [string, number | undefined][] = tags instanceof Map ? [...tags] : tags.map((t) => [t, undefined]);
+const items = entries.map(([tag, count]) => ({
+  label: `#${tag}`,
+  href: localePath(`/tags/${encodeURIComponent(tag)}/`, lang),
+  count,
+  current: tag === current,
+}));
+---
+
+<ChipList items={items} lang={lang} limit={limit} />

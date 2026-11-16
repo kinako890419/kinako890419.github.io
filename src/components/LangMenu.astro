@@ -1,0 +1,122 @@
+---
+import PixelIcon from './PixelIcon.astro';
+import { languages, localePath, stripLocale, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+// the same page in each language
+const basePath = stripLocale(Astro.url.pathname);
+const options = (Object.keys(languages) as Lang[]).map((l) => ({
+  lang: l,
+  href: localePath(basePath, l),
+  ...languages[l],
+}));
+---
+
+<div class="lang-menu" data-lang-menu>
+  <button
+    class="lang-btn pixel-btn"
+    type="button"
+    aria-label={t('lang.label')}
+    title={t('lang.label')}
+    aria-expanded="false"
+    aria-controls="lang-menu-list"
+  >
+    <PixelIcon name="globe" />
+  </button>
+  <ul id="lang-menu-list" class="lang-list pixel-box pixel" hidden>
+    {options.map((o) => (
+      <li>
+        <a href={o.href} hreflang={o.htmlLang} lang={o.htmlLang} aria-current={o.lang === lang ? 'true' : undefined}>
+          {o.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .lang-menu {
+    position: relative;
+  }
+  .lang-btn {
+    padding: 0.45em;
+    font-size: 1.1rem;
+  }
+  .lang-btn[aria-expanded='true'] {
+    background: var(--accent-pale);
+  }
+  .lang-list {
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    right: 0;
+    z-index: 10;
+    min-width: 8.5rem;
+    margin: 0;
+    padding: 0.35rem;
+    list-style: none;
+    font-size: 0.875rem;
+  }
+  .lang-list[hidden] {
+    display: none;
+  }
+  .lang-list a {
+    position: relative;
+    display: block;
+    padding: 0.3em 0.6em 0.3em 1.4em;
+    color: var(--text);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .lang-list a::before {
+    content: '▸';
+    position: absolute;
+    left: 0.4em;
+    color: var(--accent);
+    visibility: hidden;
+  }
+  .lang-list a:is(:hover, :focus-visible) {
+    background: var(--accent-pale);
+  }
+  .lang-list a[aria-current]::before {
+    visibility: visible;
+  }
+  .lang-list a[aria-current] {
+    color: var(--accent);
+  }
+</style>
+
+<script>
+  for (const menu of document.querySelectorAll<HTMLElement>('[data-lang-menu]')) {
+    const btn = menu.querySelector('button')!;
+    const list = menu.querySelector('ul')!;
+
+    const setOpen = (open: boolean) => {
+      list.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+    };
+
+    btn.addEventListener('click', () => {
+      const open = list.hidden !== false;
+      setOpen(open);
+      if (open) list.querySelector<HTMLElement>('[aria-current]')?.focus();
+    });
+
+    // close on Escape (focus back on the button) or a click / focus outside
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !list.hidden) {
+        setOpen(false);
+        btn.focus();
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target as Node)) setOpen(false);
+    });
+    menu.addEventListener('focusout', (e) => {
+      if (!menu.contains(e.relatedTarget as Node | null)) setOpen(false);
+    });
+  }
+</script>

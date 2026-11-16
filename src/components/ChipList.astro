@@ -1,0 +1,105 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+
+export interface Chip {
+  label: string;
+  href: string;
+  count?: number;
+  current?: boolean;
+}
+
+interface Props {
+  items: Chip[];
+  lang: Lang;
+  /** show only this many chips until "load more..." is clicked */
+  limit?: number;
+  /** one chip per line instead of wrapping */
+  stack?: boolean;
+}
+const { items, lang, limit = Infinity, stack = false } = Astro.props;
+const t = useTranslations(lang);
+// start expanded when the current chip would otherwise be hidden
+const collapsed = items.length > limit && !items.slice(limit).some((c) => c.current);
+---
+
+{items.length > 0 && (
+  <ul class:list={['chips pixel', { 'chips--stack': stack }]}>
+    {items.map((c, i) => (
+      <li hidden={collapsed && i >= limit}>
+        <a href={c.href} aria-current={c.current ? 'page' : undefined}>
+          {c.label}
+          {c.count !== undefined && <span class="count">{c.count}</span>}
+        </a>
+      </li>
+    ))}
+    {collapsed && (
+      <li class="more-item">
+        <button type="button" class="more" data-chips-more>
+          {t('chips.more')}
+        </button>
+      </li>
+    )}
+  </ul>
+)}
+
+<script>
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-chips-more]')) {
+    btn.addEventListener('click', () => {
+      const list = btn.closest('ul')!;
+      const hidden = list.querySelectorAll<HTMLLIElement>('li[hidden]');
+      hidden.forEach((li) => (li.hidden = false));
+      btn.parentElement!.remove();
+      hidden[0]?.querySelector('a')?.focus();
+    });
+  }
+</script>
+
+<style>
+  .chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin: 0;
+    padding: 0;
+    font-size: 0.875rem;
+  }
+  a {
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    color: var(--text);
+    background: var(--accent-pale);
+    text-decoration: none;
+  }
+  a:hover,
+  a[aria-current] {
+    background: var(--accent-soft);
+  }
+  .count {
+    margin-left: 0.35em;
+    color: var(--text-muted);
+  }
+  .chips--stack {
+    flex-direction: column;
+  }
+  .chips--stack a {
+    display: block;
+  }
+  .more-item {
+    flex-basis: 100%;
+  }
+  .more {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 2px;
+    cursor: pointer;
+  }
+  .more:hover {
+    text-decoration-style: dotted;
+  }
+</style>

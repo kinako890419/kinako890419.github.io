@@ -1,0 +1,36 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { toLang, type Lang } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang?: Lang;
+  /** wider column, for pages with a sidebar */
+  wide?: boolean;
+}
+const { title, description, lang = toLang(Astro.currentLocale), wide = false } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} lang={lang}>
+  <div class:list={['page', { 'page--wide': wide }]}>
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    width: min(100% - 2rem, 46rem);
+    margin: 1.5rem auto 3rem;
+  }
+  .page--wide {
+    width: min(100% - 2rem, 62rem);
+  }
+  .page :global(.page-title) {
+    font-family: var(--font-pixel);
+    font-weight: normal;
+    font-size: 2rem;
+    line-height: 1.3;
+    margin: 0 0 1.5rem;
+  }
+</style>

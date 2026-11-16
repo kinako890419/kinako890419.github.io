@@ -1,0 +1,37 @@
+site:
+  title: kinako890419
+  description:
+    zh-tw: 雜談區
+    en: Portfolio and blog
+  # shown in the footer (© year author)
+  author: kinako890419
+
+card:
+  # 0 = no holo shine, 1 = full rainbow foil
+  holo: 0.6
+
+  status:
+    github: kinako890419
+    fallback: ':bubble_tea:'
+
+  # Shown behind the card; visible once the card is dragged away
+  credit:
+    label: Art Credit
+    url: https://www.plurk.com/p/pbs3rc
+
+  front:
+    links:
+      - label: GitHub
+        url: https://github.com/kinako890419
+      - label: LinkedIn
+        url: https://www.linkedin.com/in/%E5%AE%A5%E6%B1%9D-%E9%99%B3-56b327234/
+      - label: { zh-tw: 部落格, en: Blog }
+        url: /blog/
+
+  # Lavender side (after flipping)
+  back:
+    links:
+      - label: Plurk
+        url: https://www.plurk.com/p/3igic7acuf
+      - label: { zh-tw: 部落格, en: Blog }
+        url: /blog/

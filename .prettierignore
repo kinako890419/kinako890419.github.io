@@ -1,0 +1,7 @@
+dist/
+.astro/
+node_modules/
+public/
+src/content/blog
+src/data/sprites.generated.json
+package-lock.json
