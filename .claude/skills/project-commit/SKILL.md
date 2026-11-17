@@ -1,6 +1,6 @@
 ---
 name: project-commit
-description: "Commit the current changes with a message in this repo's commit style (type: summary, optional [what]/[why]/[how]/[todo] body). Confirms the branch and the staged file list first, never pushes."
+description: "Commit the current changes with a message in this repo's commit style (type: summary, optional [what]/[why]/[how]/[todo] body). Confirms the branch and the staged file list first with AskUserQuestion, never pushes."
 ---
 
 # project-commit
@@ -34,9 +34,11 @@ Trivial changes (one-liners, config bumps) touching a single feature may use a p
 
 ## Steps
 
+Ask every confirmation below with the `AskUserQuestion` tool (numbered options), not as a plain-text question. The dialog may hide earlier text, so put the branch, files and message the user is approving in the question itself. The user can always pick "Other" to answer in their own words; follow what they say.
+
 ### 0. Confirm the branch
 
-Before doing anything else, run `git branch --show-current`, tell the user which branch they're on, and ask for permission to proceed with committing on it. Do not continue to the next step until they confirm.
+Before doing anything else, run `git branch --show-current` and use `AskUserQuestion` to confirm committing on that branch, with options such as "Commit on <branch>" and "Stop". If the changes split naturally into several commits, ask about that in the same call (e.g. "One commit" / "Split into N commits", listing what each would hold). Do not continue to the next step until they confirm.
 
 ### 1. Inspect changes
 
@@ -63,7 +65,14 @@ Also list untracked files and skim their content so they are described accuratel
 
 ### 4. Confirm the file list
 
-Before committing, run `git diff --cached --name-status` and list exactly which staged files will be committed. Stop and wait for the user's confirmation before proceeding — do not run step 5 until they approve.
+Before committing, run `git diff --cached --name-status`, then use `AskUserQuestion` to confirm. The question must show the full commit message and exactly which staged files will be committed. Offer options such as:
+
+1. "Commit": run step 5 as shown.
+2. "Edit message": the user says what to change (via "Other" or a follow-up); revise the message and ask again.
+3. "Change files": the user says what to stage or unstage; adjust, re-run `git diff --cached --name-status`, and ask again.
+4. "Cancel": stop without committing and leave the staging as it is.
+
+Do not run step 5 until they pick "Commit".
 
 ### 5. Commit (no push)
 

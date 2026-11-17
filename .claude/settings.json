@@ -10,6 +10,20 @@
             "command": "cd \"$CLAUDE_PROJECT_DIR\" && npm run lint --silent >&2 || exit 2",
             "timeout": 60,
             "statusMessage": "Linting before commit"
+          },
+          {
+            "type": "command",
+            "if": "Bash(git commit *)",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/confirm-git.mjs\" commit",
+            "timeout": 30,
+            "statusMessage": "Summarizing commit"
+          },
+          {
+            "type": "command",
+            "if": "Bash(git push *)",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/confirm-git.mjs\" push",
+            "timeout": 30,
+            "statusMessage": "Summarizing push"
           }
         ]
       }
