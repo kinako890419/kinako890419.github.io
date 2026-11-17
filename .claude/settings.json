@@ -7,7 +7,7 @@
           {
             "type": "command",
             "if": "Bash(git commit *)",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && npm run lint --silent >&2 || exit 2",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/runs-git.mjs\" commit || exit 0; cd \"$CLAUDE_PROJECT_DIR\" && npm run lint --silent >&2 || exit 2",
             "timeout": 60,
             "statusMessage": "Linting before commit"
           },

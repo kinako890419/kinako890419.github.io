@@ -9,6 +9,10 @@ for await (const chunk of process.stdin) input += chunk;
 const { tool_input: toolInput = {}, cwd = process.cwd() } = JSON.parse(input || '{}');
 const command = toolInput.command ?? '';
 
+// Only act on a real `git commit` / `git push` (the settings `if` filter does not always hold), else allow silently.
+const runsMode = new RegExp(String.raw`(?:^|[;&|(\s])git(?:\s+-[cC]\s+\S+|\s+--?[\w-]+(?:=\S+)?)*\s+${mode}\b`);
+if (!runsMode.test(command)) process.exit(0);
+
 const target =
   command.match(/git\s+-C\s+("?)([^"\s]+)\1/)?.[2] ??
   command.match(/(?:^|&&|;)\s*cd\s+("?)([^"&;]+?)\1\s*(?:&&|;)/)?.[2];
