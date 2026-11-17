@@ -30,6 +30,18 @@
     ],
     "PostToolUse": [
       {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git push *)",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/report-actions.mjs\"",
+            "timeout": 40,
+            "statusMessage": "Finding the GitHub Actions run"
+          }
+        ]
+      },
+      {
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
