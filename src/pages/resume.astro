@@ -1,0 +1,279 @@
+---
+// /resume/ (zh-tw) and /en/resume/ (en): data from blog-posts/resume/<lang>.md front matter
+import PageLayout from '../layouts/PageLayout.astro';
+import InlineLinks from '../components/InlineLinks.astro';
+import { getResume, type ResumeEntry } from '../lib/resume';
+import { toLang, useTranslations } from '../i18n/ui';
+
+const lang = toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const r = await getResume(lang);
+
+const sections: { key: 'work' | 'education'; heading: string; entries: ResumeEntry[] }[] = [
+  { key: 'work' as const, heading: t('resume.work'), entries: r.work },
+  { key: 'education' as const, heading: t('resume.education'), entries: r.education },
+].filter((s) => s.entries.length > 0);
+---
+
+<PageLayout title={t('resume.title')} description={`${r.name} · ${r.headline}`} lang={lang} translated>
+  <article class="resume">
+    <header class="resume-head">
+      <h1 class="page-title">
+        {r.name}
+        {r.altName && <span class="alt-name">{r.altName}</span>}
+      </h1>
+      <p class="headline">
+        <span class="pixel">{r.headline}</span>
+        {r.email && (
+          <a class="contact" href={`mailto:${r.email}`}>
+            {r.email}
+          </a>
+        )}
+      </p>
+    </header>
+
+    <p class="summary">
+      <InlineLinks text={r.summary} />
+    </p>
+
+    {r.skills.length > 0 && (
+      <section>
+        <h2>{t('resume.skills')}</h2>
+        <dl class="skills pixel-box">
+          {r.skills.map((s) => (
+            <div>
+              <dt class="pixel">{s.label}</dt>
+              <dd>
+                <InlineLinks text={s.details} />
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )}
+
+    {sections.map(({ key, heading, entries }) => (
+      <section>
+        <h2>{heading}</h2>
+        {entries.map((e) => (
+          <div class="entry pixel-box">
+            <h3>
+              {e.url ? (
+                <a href={e.url} target="_blank" rel="noopener noreferrer">
+                  {e.org} ↗
+                </a>
+              ) : (
+                e.org
+              )}
+            </h3>
+            <div class="entry-sub">
+              <p class="role">{e.role ?? e.degree}</p>
+              <p class="date pixel">{e.date}</p>
+            </div>
+            {e.summary && (
+              <p class="entry-summary">
+                <InlineLinks text={e.summary} />
+              </p>
+            )}
+            {e.highlights.length > 0 && (
+              <ul class:list={['highlights', { 'highlights--groups': key === 'work' }]}>
+                {e.highlights.map((h) =>
+                  typeof h === 'string' ? (
+                    <li>
+                      <InlineLinks text={h} />
+                    </li>
+                  ) : (
+                    <li>
+                      <h4>
+                        {h.url ? (
+                          <a href={h.url} target="_blank" rel="noopener noreferrer">
+                            {h.title} ↗
+                          </a>
+                        ) : (
+                          h.title
+                        )}
+                      </h4>
+                      <ol>
+                        {h.items.map((item) => (
+                          <li>
+                            <InlineLinks text={item} />
+                          </li>
+                        ))}
+                      </ol>
+                    </li>
+                  ),
+                )}
+              </ul>
+            )}
+          </div>
+        ))}
+      </section>
+    ))}
+
+    {r.updated && (
+      <p class="updated pixel">
+        {t('resume.updated')}
+        {r.updated}
+      </p>
+    )}
+  </article>
+</PageLayout>
+
+<style>
+  /* one size per level, used everywhere on the page */
+  .resume {
+    --fs-h3: 1.25rem; /* company / school */
+    --fs-h4: 1.0625rem; /* highlight group */
+    --fs-text: 1rem; /* every paragraph and list item */
+    --fs-meta: 0.875rem; /* dates, update note */
+    font-size: var(--fs-text);
+  }
+  .resume-head {
+    margin-bottom: 1.5rem;
+  }
+  .resume-head .page-title {
+    margin-bottom: 0.25rem;
+  }
+  .alt-name {
+    margin-left: 0.5em;
+    color: var(--text-muted);
+  }
+  .headline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 1rem;
+    margin: 0;
+    font-size: 1.125rem;
+    color: var(--accent);
+  }
+  .contact {
+    font-size: var(--fs-text);
+  }
+  .summary {
+    margin: 0 0 2rem;
+  }
+
+  h2 {
+    font-family: var(--font-pixel);
+    font-weight: normal;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    margin: 2.2rem 0 0.9rem;
+  }
+  h2::before {
+    content: '▸ ';
+    color: var(--accent);
+  }
+
+  .skills {
+    margin: var(--px) var(--px) 0;
+    padding: 0.75rem 1rem;
+  }
+  .skills > div {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: 0.25rem 1rem;
+    padding: 0.3rem 0;
+  }
+  .skills > div + div {
+    border-top: 2px dashed var(--line);
+  }
+  .skills dt {
+    color: var(--accent);
+  }
+  .skills dd {
+    margin: 0;
+  }
+
+  .entry {
+    padding: 1rem 1.25rem;
+  }
+  .entry + .entry {
+    margin-top: 1.5rem;
+  }
+  h3 {
+    margin: 0;
+    font-size: var(--fs-h3);
+    line-height: 1.5;
+  }
+  /* role/degree on the left, date on the right, always one row */
+  .entry-sub {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .role {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  .date {
+    margin: 0;
+    font-size: var(--fs-meta);
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .entry-summary {
+    margin: 0.4rem 0 0;
+    font-size: var(--fs-text);
+    color: var(--text-muted);
+  }
+
+  .highlights {
+    margin: 0.75rem 0 0;
+    padding-left: 1.2em;
+    list-style: '◆ ';
+  }
+  .highlights > li::marker {
+    color: var(--accent-soft);
+  }
+  .highlights > li + li {
+    margin-top: 0.4rem;
+  }
+  .highlights--groups > li + li {
+    margin-top: 0.9rem;
+  }
+  h4 {
+    margin: 0;
+    font-size: var(--fs-h4);
+    font-weight: 700;
+    line-height: 1.6;
+  }
+  :is(h3, h4) a {
+    text-decoration: none;
+  }
+  :is(h3, h4) a:hover {
+    text-decoration: underline dotted;
+  }
+  ol {
+    margin: 0.2rem 0 0;
+    padding-left: 1.4em;
+  }
+  ol li::marker {
+    color: var(--text-muted);
+  }
+
+  .updated {
+    margin: 2rem 0 0;
+    font-size: var(--fs-meta);
+    text-align: right;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 560px) {
+    .skills > div {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .entry {
+      padding: 0.9rem 1rem;
+    }
+    .headline {
+      font-size: 1rem;
+    }
+    .entry-sub {
+      gap: 0.5rem;
+    }
+  }
+</style>

@@ -8,11 +8,13 @@ interface Props {
   lang?: Lang;
   /** wider column, for pages with a sidebar */
   wide?: boolean;
+  /** page has its own text per language (see BaseLayout) */
+  translated?: boolean;
 }
-const { title, description, lang = toLang(Astro.currentLocale), wide = false } = Astro.props;
+const { title, description, lang = toLang(Astro.currentLocale), wide = false, translated = false } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} lang={lang}>
+<BaseLayout title={title} description={description} lang={lang} translated={translated}>
   <div class:list={['page', { 'page--wide': wide }]}>
     <slot />
   </div>

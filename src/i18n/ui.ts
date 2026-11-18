@@ -25,6 +25,7 @@ export const ui = {
   'zh-tw': {
     'nav.home': '首頁',
     'nav.blog': '部落格',
+    'nav.resume': '履歷',
     'theme.toLight': '切換為淺色主題',
     'theme.toDark': '切換為深色主題',
     'lang.label': '語言',
@@ -49,10 +50,16 @@ export const ui = {
     'pager.page': '第 {n} 頁',
     '404.title': '找不到這一頁',
     '404.home': '回到首頁',
+    'resume.title': '履歷',
+    'resume.skills': '技能',
+    'resume.work': '工作經歷',
+    'resume.education': '學歷',
+    'resume.updated': '更新日期：',
   },
   en: {
     'nav.home': 'Home',
     'nav.blog': 'Blog',
+    'nav.resume': 'Resume',
     'theme.toLight': 'Switch to light theme',
     'theme.toDark': 'Switch to dark theme',
     'lang.label': 'Language',
@@ -77,6 +84,11 @@ export const ui = {
     'pager.page': 'Page {n}',
     '404.title': 'Page not found',
     '404.home': 'Back home',
+    'resume.title': 'Resume',
+    'resume.skills': 'Skills',
+    'resume.work': 'Work Experience',
+    'resume.education': 'Education',
+    'resume.updated': 'Last updated:',
   },
 } as const satisfies Record<Lang, Record<string, string>>;
 

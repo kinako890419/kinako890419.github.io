@@ -14,7 +14,8 @@ export function toSlug(text: string): string {
 
 const blog = defineCollection({
   loader: glob({
-    pattern: '**/*.md',
+    // resume/ holds the resume page's data, not posts
+    pattern: ['**/*.md', '!resume/**'],
     base: './src/content/blog',
     // id = "<lang>/<slug>", so the same title in two languages doesn't clash
     generateId: ({ entry, data }) => {
@@ -39,4 +40,47 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const str = z.string().min(1);
+
+/** A titled list of points; the title can link out. */
+const highlightGroup = z
+  .object({
+    title: str,
+    url: z.url().optional(),
+    items: z.array(str).min(1),
+  })
+  .strict();
+
+/** A job or a school. */
+const resumeEntry = z
+  .object({
+    org: str,
+    url: z.url().optional(),
+    role: str.optional(),
+    degree: str.optional(),
+    date: str,
+    summary: str.optional(),
+    highlights: z.array(z.union([str, highlightGroup])).default([]),
+  })
+  .strict();
+
+/**
+ * Resume page data: front matter of blog-posts/resume/<lang>.md (id = lang).
+ * The Markdown body is ignored. Sections left out are skipped on the page.
+ */
+const resume = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/blog/resume' }),
+  schema: z.object({
+    name: str,
+    altName: str.optional(),
+    headline: str,
+    email: z.email().optional(),
+    updated: str.optional(),
+    summary: str,
+    skills: z.array(z.object({ label: str, details: str }).strict()).default([]),
+    work: z.array(resumeEntry).default([]),
+    education: z.array(resumeEntry).default([]),
+  }),
+});
+
+export const collections = { blog, resume };

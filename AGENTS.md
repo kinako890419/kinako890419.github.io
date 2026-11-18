@@ -5,6 +5,8 @@
 - Posts live in a separate repo: `~/Documents/blog-posts/zh-tw/<title as URL>.md`
   (images in `blog-posts/zh-tw/images/`, linked as `./images/x.png`).
 - `src/content/blog` is a git-ignored symlink to it: `ln -s ../../../blog-posts src/content/blog`.
+- The resume page (`/resume/`, `/en/resume/`) also lives there: front matter of
+  `blog-posts/resume/<lang>.md` (body ignored; schema in `src/content.config.ts`).
 
 ## Agent skills (`.claude/skills/`)
 
@@ -15,9 +17,11 @@
 
 ```
 src/data/profile.yaml          card + site text (edit this)
-src/content/blog/              posts (symlink to ../blog-posts)
-src/content.config.ts          blog collection + title => URL rule
+src/content/blog/              posts + resume/ (symlink to ../blog-posts)
+src/content.config.ts          blog + resume collections, title => URL rule
 src/lib/posts.ts               post queries, CONTENT_LANG, paging
+src/lib/resume.ts              resume query (falls back to zh-tw)
+src/pages/resume.astro         resume page
 src/lib/github-status.ts       build-time GitHub status emoji
 src/i18n/ui.ts                 UI strings (zh-tw, en) + locale helpers
 src/layouts/BaseLayout.astro   header, nav, canonical
